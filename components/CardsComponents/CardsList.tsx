@@ -1,8 +1,9 @@
-import { StyleSheet} from 'react-native'
-import React from 'react'
+import { StyleSheet, useWindowDimensions} from 'react-native'
+import React, { useState } from 'react'
 import { View,Text } from './../Themed'
 import Card from './Card'
 import { Gesture,GestureDetector } from 'react-native-gesture-handler'
+import Animated,{cancelAnimation, clamp, useSharedValue, withClamp, withDecay}  from "react-native-reanimated"
 
 const CardsList = () => {
   const data = [
@@ -17,21 +18,38 @@ const CardsList = () => {
     require("../../assets/cards/Card 9.png")
 
   ]
+  const [listHeight, setListHeight] = useState<any>()
+  const {height} = useWindowDimensions();
+  console.log("listHeight:",listHeight)
+  console.log("Height:",height)
 
-  const pan  = Gesture.Pan().onStart(() => {
+  const centeredListHeight = listHeight - height;
+
+  const scrollY = useSharedValue(0);
+
+  const pan  = Gesture.Pan()
+  .onBegin(() => {
+    cancelAnimation(scrollY)
+  })
+  .onStart(() => {
     console.log("panning start")
   }).onChange((event) => {
-    console.log("panning.. scroll y :",event.changeY)
-  }).onEnd(() => {
-    console.log("panning end.")
+    scrollY.value =clamp(scrollY.value - event.changeY,0,centeredListHeight)
+    console.log("scroll y :",scrollY.value)
+
+  }).onEnd((event) => {
+    scrollY.value = withClamp({
+      min:0,
+      max:centeredListHeight,
+    }, withDecay({velocity:-event.velocityY}))
   });
 
   return (
     <GestureDetector gesture={pan}>
-    <View style={{padding:10}}>
+    <View style={{padding:10}} onLayout={(e) => setListHeight(e.nativeEvent.layout.height)}>
       {
         data.map((card,index) => (
-          <Card  card={card} key={index}/>
+          <Card  card={card} key={index} scrolly={scrollY}/>
         ))
       }
     </View>

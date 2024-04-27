@@ -5,11 +5,9 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function TabOneScreen() {
   return (
-    <SafeAreaView style={{flex:1}}>
     <View style={styles.container}>
       <CardsList />
     </View>
-    </SafeAreaView>
   );
 }
 
