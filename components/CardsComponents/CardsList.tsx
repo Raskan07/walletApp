@@ -44,12 +44,20 @@ const CardsList = () => {
     }, withDecay({velocity:-event.velocityY}))
   });
 
+  const activeCardIndex = useSharedValue(null);
+
   return (
     <GestureDetector gesture={pan}>
     <View style={{padding:10}} onLayout={(e) => setListHeight(e.nativeEvent.layout.height)}>
       {
         data.map((card,index) => (
-          <Card  card={card} key={index} scrolly={scrollY}/>
+          <Card
+            key={index}
+            card={card}
+            index={index}
+            scrollY={scrollY}
+            activeCardIndex={activeCardIndex}
+          />
         ))
       }
     </View>
