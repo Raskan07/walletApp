@@ -1,10 +1,11 @@
+import CardsList from '@/components/CardsComponents/CardsList';
 import { StyleSheet,View } from 'react-native';
 
 
 export default function TabOneScreen() {
   return (
     <View style={styles.container}>
-      
+      <CardsList />
     </View>
   );
 }
