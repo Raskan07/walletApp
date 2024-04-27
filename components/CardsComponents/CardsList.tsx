@@ -2,6 +2,7 @@ import { StyleSheet} from 'react-native'
 import React from 'react'
 import { View,Text } from './../Themed'
 import Card from './Card'
+import { Gesture,GestureDetector } from 'react-native-gesture-handler'
 
 const CardsList = () => {
   const data = [
@@ -16,7 +17,17 @@ const CardsList = () => {
     require("../../assets/cards/Card 9.png")
 
   ]
+
+  const pan  = Gesture.Pan().onStart(() => {
+    console.log("panning start")
+  }).onChange((event) => {
+    console.log("panning.. scroll y :",event.changeY)
+  }).onEnd(() => {
+    console.log("panning end.")
+  });
+
   return (
+    <GestureDetector gesture={pan}>
     <View style={{padding:10}}>
       {
         data.map((card,index) => (
@@ -24,6 +35,7 @@ const CardsList = () => {
         ))
       }
     </View>
+    </GestureDetector>
   )
 }
 
